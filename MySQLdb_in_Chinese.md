@@ -139,5 +139,15 @@ UNIX sockets 和 suck windows 都不能通过网络工作, 如果你指明的不是`localhost`, TC
 > 2. mysql默认监听3306, 呵呵，自己以前还真是傻呢
 
 ```python
+# = =! Why is moonpie...? Is this from the big theory?
 db=_mysql.connect(host="outhouse",port=3307,passwd="moonpie",db="thangs")
+```
+
+If you really had to, you could connect to the local host with TCP by specifying the full host name, or 127.0.0.1.
+Generally speaking, putting passwords in your code is not such a good idea:
+如果你真的需要，你可以通过指明全host name, 或者 127.0.0.1，就能用TCP连接本机了。
+通常来说，把密码放到代码里，不是个好主意。译者：虽然基本我遇到的公司都是这样做，某企鹅的离职员工也没什么反应，setting文件权限也就是666.
+
+```python
+db=_mysql.connect(host="outhouse",db="thangs",read_default_file="~/.my.cnf")
 ```
