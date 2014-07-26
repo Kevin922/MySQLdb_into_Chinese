@@ -30,12 +30,14 @@ MySQL的C语言API 已经被封装成了面向对象。唯一实现了的MySQL 数据结构是 MYSQL(datab
 - 并且 任何一个接受 `MYSQL_RES *result`作为参数的function 现在都被实现成了 一个result object对象的method.
 - 那些需要MySQL 其他的数据结构的Functions 基本都没实现. 已过时的functions 没有实现. 总体上，前缀`mysql_`已经从名字中移除. 大多数列出的 conn methods 同样能在 MySQLdb connection object methods 中使用. 他们用起来不轻便(这句翻译的是个p).
 
+
 > 你好，我是译者注释 k9，请发美女电话到 yan95207396@126.com
 > 1. database connection handle(译者注: 就是连接mysql的方法, 用用就明白了)
 > 2. result handel(译者注: 猜测是 把sql查询 转义出了 list, tuple之类的python数据结构)
 > 3. 译者真是好人, 给了这么多注释 Orz. 我喜欢美女哈，邮箱 yan95207396@126.com. 1024.
 > 4. MYSQL *mysql = int *p, 这是指mysql官方文档中. 这是译者准确地猜测，你要明白c指针. 如果猜错，欢迎指出 Orz.
-> conn methods 看下表
+> 5. conn methods 看下表
+
 
 ### MySQL C API function mapping 对照表
 | C API | _mysql | Orz 注释
@@ -109,9 +111,33 @@ This creates a connection to the MySQL server running on the local machine via a
 
 通过 UNIX socket (or suck windows) 创建了一个本地连接 MySQL 服务器的连接, 用户名 "joebob", 密码 "moonpie", 并且 使用了 "thangs"为初试数据库.
 
- 
 
 We haven't even begun to touch upon all the parameters connect() can take. For this reason, I prefer to use keyword parameters:
 
+我们还没有接触到 `connect()`的所有参数. 基于此, 个人更倾向使用 关键字参数：
+
+```python
+# 推荐
 db=_mysql.connect(host="localhost",user="joebob",
-                  passwd="moonpie",db="thangs")
+passwd="moonpie",db="thangs")
+```
+
+This does exactly what the last example did, but is arguably easier to read. But since the default host is "localhost", and if your login name really was "joebob", you could shorten it to this:
+这个例子完全与上例功能相同, 但是, 可以说更易读. 但是因为 `host` 的默认值就是`localhost` , 并且，如果你的登陆名就是 `joebobo`, 你可以选择更简短的写法：
+
+> 关键字参数 vs 位置参数, 自查
+
+```python
+# 译者不推荐， explicit is better than no-explicit.
+db=_mysql.connect(passwd="moonpie",db="thangs")
+```
+
+UNIX sockets and named pipes don't work over a network, so if you specify a host other than localhost, TCP will be used, and you can specify an odd port if you need to (the default port is 3306):
+UNIX sockets 和 suck windows 都不能通过网络工作, 如果你指明的不是`localhost`, TCP 协议会使用, 并且你可以指明监听接口, 如果你需要(默认值是3306)
+
+> 1. 译者: localhost， 127.0.0.1, 本机, /etc/hosts
+> 2. mysql默认监听3306, 呵呵，自己以前还真是傻呢
+
+```python
+db=_mysql.connect(host="outhouse",port=3307,passwd="moonpie",db="thangs")
+```
