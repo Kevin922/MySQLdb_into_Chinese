@@ -207,4 +207,43 @@ The second parameter (how) tells it how the row should be represented. By defaul
 > 3. `how=2`, 与`how=1` 基本相同, 除了 key 键总是 `table.column` 形式. 这是为了与旧的 MySQLdb库 兼容.
 
 
+OK, so why did we get a 1-tuple with a tuple inside? Because we implicitly asked for one row, since we didn't specify maxrows.
+
+OK, 那么为什么我们获得一个 一维tuple在一个tuple中呢? 因为我们隐式要求返回一行, 因为我们没有指明`maxrows`参数.
+
+The other oddity is: Assuming these are numeric columns, why are they returned as strings? Because MySQL returns all data as strings and expects you to convert it yourself. This would be a real pain in the ass, but in fact, _mysql can do this for you. (And MySQLdb does do this for you.) To have automatic type conversion done, you need to create a type converter dictionary, and pass this to connect() as the conv keyword parameter.
+
+另外一个怪癖: 假设存在数字行, 为什么他们被返回成了字符呢? 因为MySQL 把所有的返回数据都当作字符串 并且 希望你靠自己所转化. 这真是**菊花痛啊**(`Orz`, 小的跪了, 这尼玛大神就是大神, 能让我翻译这样的话出来, 小的甚是荣幸啊 `T_T`), 但实际上, `_mysql` 可以帮你做这个. (并且 MySQLdb 确实会为你做这个.) 需要让 **自动转化类型执行**, 你需要创建一个 **类型转换 字典**, 并且 把这个 **类型转换 字典** 传入 `connect()` 作为 `conv` 转换关键字参数.
+
+The keys of conv should be MySQL column types, which in the C API are FIELD_TYPE_*. You can get these values like this:
+
+`conv`的 关键字 应该是MySQL 的 列类型, 列类型在 C API中是 `FIELD_TYPE_*`. 你能像这样获得返回值:
+
+```python
+from MySQLdb.constants import FIELD_TYPE
+```
+
+By default, any column type that can't be found in conv is returned as a string, which works for a lot of stuff. For our purposes, we probably want this:
+
+默认, 如何不能从 `conv` 找到的 `列类型` 都作为一个`string`, 这试用与很多事情. 对我们而言, 我们可能想要这样:
+
+```python
+my_conv = { FIELD_TYPE.LONG: int }
+```
+
+This means, if it's a FIELD_TYPE_LONG, call the builtin int() function on it. Note that FIELD_TYPE_LONG is an INTEGER column, which corresponds to a C long, which is also the type used for a normal Python integer. But beware: If it's really an UNSIGNED INTEGER column, this could cause overflows. For this reason, MySQLdb actually uses long() to do the conversion. But we'll ignore this potential problem for now.
+
+这意味着, 如果是一个 `FIELD_TYPE_LONG`类型, 会调用内置函数 `int()`做转换. 注意 `FIELD_TYPE_LONG`列 是一个 `INTEGER`整型列( **此处翻译准确吗？**), 与C语言中 long型相对应, 同时与python中的 `integer`整型相对应. 但要注意: 如果 列类型 是 `UNSIGNED INTEGER` 非负整型, 这可能会导致数据溢出. 基于此原因, MySQLdb真正使用 `long()`去做转换. 但是我们目前 会无视潜在问题.
+
+Then if you use `db=_mysql.connect(conv=my_conv...)`, the results will come back `((3, 2, 0),)` , which is what you would expect.
+
+然后, 如果你使用了 `db=_mysql.connect(conv=my_conv...)`, 返回值会是 `((3, 2, 0),)`, 这也是你想要的.
+
+```python
+>>> db=_mysql.connect(conv=my_conv...)
+((3, 2, 0),)
+```
+
+### MySQLdb
+
 
