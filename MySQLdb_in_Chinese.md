@@ -151,3 +151,33 @@ Generally speaking, putting passwords in your code is not such a good idea:
 ```python
 db=_mysql.connect(host="outhouse",db="thangs",read_default_file="~/.my.cnf")
 ```
+
+This does what the previous example does, but gets the username and password and other parameters from ~/.my.cnf (UNIX-like systems). Read about option files for more details.
+
+这与上例作用相同, 但是是通过 `~/.my.cnf` (类UNIX 系统) 获取用户名和密码以及其他参数. 阅读选择文件获得更多信息.
+
+So now you have an open connection as db and want to do a query. Well, there are no cursors in MySQL, and no parameter substitution, so you have to pass a complete query string to db.query():
+那么，现在你有了一个与db的连接，然后你想去执行查询. Well, 在MySQL 中没有 cursors的概念, 并且没有其替代的参数, 所以你不得不传一个完整的查询语句给 `db.query()`:
+
+> 译者不明白, cursor在其他数据库中，是一个常有概念吗？很好用吗？ MySQLdb在抽象层面是实现了cursor的.
+
+```python
+db.query("""SELECT spam, eggs, sausage FROM breakfast
+WHERE price < 5""")
+```
+
+There's no return value from this, but exceptions can be raised. The exceptions are defined in a separate module, _mysql_exceptions, but _mysql exports them. Read DB API specification PEP-249 to find out what they are, or you can use the catch-all MySQLError.
+
+这个查询没有返回值, 但是可以抛出异常. 异常的定义在另外一个module库, `_mysql_exceptions`, 但是 `_mysql` 会加载他们. 阅读 DB API规范PEP-249能明白他们是什么, 或者你可以用`MySQLError` 去捕获所有异常.
+
+> [PEP-249](http://legacy.python.org/dev/peps/pep-0249/), 要读啊，要读啊，不翻译也要读一读啊~
+
+At this point your query has been executed and you need to get the results. You have two options:
+
+目前你的查询已经被执行，然后你需要获得查询结果. 你有两个选择:
+
+```python
+r=db.store_result()
+# ...or...
+r=db.use_result()
+```
