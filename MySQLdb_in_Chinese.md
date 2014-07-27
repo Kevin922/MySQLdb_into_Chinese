@@ -181,3 +181,18 @@ r=db.store_result()
 # ...or...
 r=db.use_result()
 ```
+
+Both methods return a result object. What's the difference? store_result() returns the entire result set to the client immediately. If your result set is really large, this could be a problem. One way around this is to add a LIMIT clause to your query, to limit the number of rows returned. The other is to use use_result(), which keeps the result set in the server and sends it row-by-row when you fetch. This does, however, tie up server resources, and it ties up the connection: You cannot do any more queries until you have fetched all the rows. Generally I recommend using store_result() unless your result set is really huge and you can't use LIMIT for some reason.
+
+两个method 都会返回一个 result object. 有什么区别呢？ `store_result()` 立即返回 全部的结果集 给客户端. 如果你的结果集非常大, 这会引起问题. 关于此的一个解决方法是`LIMIT`约束, 以此限制你返回结果的数量. 另一个方法是用`user_result()`, 她能保存结果集在服务器端, 并且 在你`fetch` 获取结果的时候，一行一行地发送. 但是, 这会 绑定服务器资源, 并且 她会绑定连接: 你不能再做其他查询直到你`fetch`获取了所有行. 通常我推荐使用`store_result()` 除非你的结果集真的非常巨大 并且 你因为某些原因不能使用`LIMIT`.
+
+Now, for actually getting real results:
+
+现在, 真正地获取结果:
+
+```python
+>>> r.fetch_row()
+(('3','2','0'),)
+```
+
+
