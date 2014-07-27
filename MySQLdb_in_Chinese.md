@@ -195,4 +195,16 @@ Now, for actually getting real results:
 (('3','2','0'),)
 ```
 
+This might look a little odd. The first thing you should know is, fetch_row() takes some additional parameters. The first one is, how many rows (maxrows) should be returned. By default, it returns one row. It may return fewer rows than you asked for, but never more. If you set maxrows=0, it returns all rows of the result set. If you ever get an empty tuple back, you ran out of rows.
+
+这可能看起来有点奇怪. 首先你要知道的是, `fetch_row()` 接受一些额外的参数. 第一个是, 多少行 (`maxrows` 最大行数). 默认值, 她会返回一行. 她可能会返回少于你要求的行数, 但是永远不会多于. 如果你设置 `maxrows=0`, 她返回结果集的所有行. 一旦你获得一个空元组回来, 你就遍历了所有行.
+
+The second parameter (how) tells it how the row should be represented. By default, it is zero which means, return as a tuple. how=1 means, return it as a dictionary, where the keys are the column names, or table.column if there are two columns with the same name (say, from a join). how=2 means the same as how=1 except that the keys are always table.column; this is for compatibility with the old Mysqldb module.
+
+第二个参数 (`how`) 决定了 行的展现方式. 
+> 1. 默认值, `how` 是0, 这意味着返回值是 tuple元组. 
+> 2. `how=1`, 返回值是 dict字典, key 键是 字段名(列名), 或者是 `table.column` 如果返回值有两个 相同的字段名(比如, 联合查询). 
+> 3. `how=2`, 与`how=1` 基本相同, 除了 key 键总是 `table.column` 形式. 这是为了与旧的 MySQLdb库 兼容.
+
+
 
