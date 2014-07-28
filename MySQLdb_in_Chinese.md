@@ -246,4 +246,49 @@ Then if you use `db=_mysql.connect(conv=my_conv...)`, the results will come back
 
 ### MySQLdb
 
+MySQLdb is a thin Python wrapper around _mysql which makes it compatible with the Python DB API interface (version 2). In reality, a fair amount of the code which implements the API is in _mysql for the sake of efficiency.
+
+MySQLdb 是对`_mysql`的一层简单封装, 这使她兼容 Python DB API interface(version 2). 实际上, 相当数量的代码为了效率, 使用`_mysql`实现了 API.
+
+
+
+The DB API specification PEP-249 should be your primary guide for using this module. Only deviations from the spec and other database-dependent things will be documented here.
+
+DB API规则**PEP-249**应该是你使用这个库的主要指导. **只有与规范不同 以及 其他的数据库依赖 会被记入这个文档. **
+
+
+
+### Functions and attributes
+
+Only a few top-level functions and attributes are defined within MySQLdb.
+
+只有一些 top-level的 方法 和 属性在 MySQLdb 中被定义.
+
+`connect(parameters...)`
+Constructor for creating a connection to the database. Returns a Connection Object. Parameters are the same as for the MySQL C API. In addition, there are a few additional keywords that correspond to what you would pass mysql_options() before connecting. Note that some parameters must be specified as keyword arguments! The default value for each parameter is NULL or zero, as appropriate. Consult the MySQL documentation for more details. The important parameters are:
+
+构造器为了 建立一个与数据库的连接. 返回一个 `Connection Object`连接对象. 参数与 MySQL C API相同. 此外, 有一些额外的关键字与传入`mysql_options()`的参数相对应, `mysql_options()` 在建立连接之前(Orz, 啥j8翻译...). 注意, 一些参数应该当作 **关键字参数**被赋值! 对每一个参数的默认值都是 NULL 或者 零, 如适用. 查询 MySQL 文档活得更多信息. 重要的参数有:
+
+`host`
+name of host to connect to. Default: use the local host via a UNIX socket (where applicable)
+连接的主机名. 默认: 使用localhost通过一个 UNIX socket(如果可用)
+
+`user`
+user to authenticate as. Default: current effective user.
+用户名用来授权. 默认: 当前的有效用户.
+
+`passwd`
+password to authenticate with. Default: no password.
+用来授权的密码. 默认: 没有密码
+
+`db`
+database to use. Default: no default database.
+要使用的 库. 默认: 不选择库.
+
+`port`
+TCP port of MySQL server. Default: standard port (3306).
+MySQL服务器的TCP端口. 默认: 标准端口(3306)
+
+`unix_socket`
+
 
