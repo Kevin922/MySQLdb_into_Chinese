@@ -373,23 +373,46 @@ This must be a keyword parameter.
 这只能当做**关键字参数**使用.
 
  
+`charset`
 
-charset
 If present, the connection character set will be changed to this character set, if they are not equal. Support for changing the character set requires MySQL-4.1 and later server; if the server is too old, UnsupportedError will be raised. This option implies use_unicode=True, but you can override this with use_unicode=False, though you probably shouldn't.
+
+如果赋值, 连接的字符集会改变成这个字符集, 如果他们不一样. 支持改变字符集需要MySQL-4.1或者更高版本; 如果MySQL服务器版本过久, `UnsupportedError`异常会触发. 这个选项暗含着需要 `use_unicode=True`， 但是你可以选项使用 `use_unicode=False`, 尽管不应该这样用.
 
 If not present, the default character set is used.
 
+如果没有赋值, 默认字符集会被使用.
+
 This must be a keyword parameter.
 
-sql_mode
+这应该是 **关键字参数**
+
+`sql_mode`
+
 If present, the session SQL mode will be set to the given string. For more information on sql_mode, see the MySQL documentation. Only available for 4.1 and newer servers.
+
+如果设定，`session SQL 模式` 会设定成 给定的字符串的模式. 关于更多的`sql_mode`模式, 查阅MySQL文档. 只适合4.1 或更高版本.
+
+> New skill. Get it:D [session SQL mode](http://dev.mysql.com/doc/refman/5.0/en/sql-mode.html)
 
 If not present, the session SQL mode will be unchanged.
 
+如果没有赋值, `session SQL 模式` 不会改变.
+
+> Hi,  我现在已经能直接写markdown, 不需要预览了.
+> 因为我的文档比较简单，这样简单的编辑就能满足我的想法了.
+> 虽然我也总是忍不住希望使用 vim. 常常按Esc.
+
 This must be a keyword parameter.
 
-ssl
+这必须是 **关键字参数**
+
+
+`ssl`
+
 This parameter takes a dictionary or mapping, where the keys are parameter names used by the mysql_ssl_set MySQL C API call. If this is set, it initiates an SSL connection to the server; if there is no SSL support in the client, an exception is raised. This must be a keyword parameter.
+
+
 apilevel
 String constant stating the supported DB API level. '2.0'
 threadsafety
