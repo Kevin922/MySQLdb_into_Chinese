@@ -407,20 +407,37 @@ This must be a keyword parameter.
 
 这必须是 **关键字参数**
 
-
 `ssl`
 
 This parameter takes a dictionary or mapping, where the keys are parameter names used by the mysql_ssl_set MySQL C API call. If this is set, it initiates an SSL connection to the server; if there is no SSL support in the client, an exception is raised. This must be a keyword parameter.
 
+这个参数接收一个字典 或者 映射类型, 参数的键是 `mysql_ssl_set` MySQL C API调用的参数. 如果参数是一个集合, 她启动一个与服务器的SSL连接; 如果客户端不支持SSL, 会异常报警. 必须当做是 **关键字参数**.
 
-apilevel
+
+`apilevel`
+
 String constant stating the supported DB API level. '2.0'
-threadsafety
+
+字符串包括了支持 DB API等级2.0.
+
+> 这是什么等级？
+
+`threadsafety`
+
 Integer constant stating the level of thread safety the interface supports. This is set to 1, which means: Threads may share the module.
+
+整形声明了接口对线程安全的等级. 设置为1, 表明: 线程可能共享库.
 
 The MySQL protocol can not handle multiple threads using the same connection at once. Some earlier versions of MySQLdb utilized locking to achieve a threadsafety of 2. While this is not terribly hard to accomplish using the standard Cursor class (which uses mysql_store_result()), it is complicated by SSCursor (which uses mysql_use_result(); with the latter you must ensure all the rows have been read before another query can be executed. It is further complicated by the addition of transactions, since transactions start when a cursor execute a query, but end when COMMIT or ROLLBACK is executed by the Connection object. Two threads simply cannot share a connection while a transaction is in progress, in addition to not being able to share it during query execution. This excessively complicated the code to the point where it just isn't worth it.
 
+MySQL协议不能处理多个线程同时使用一个连接. 一些早期的MySQLdb利用锁来获得 2等级的线程安全. 虽然这样没有严重地影响使用标准的 `Cursor类`( Cursor类使用 `mysql_store_result()` ), 但是他们使用了`SSCursor`(使用 `mysql_use_result()`); 后者你必须保证所有行都被遍历, 在你执行下一次操作之前. 在之后的实现中使用了 事务, 因为事务开始于一个cursor执行查询, 但是当 `Connection类`执行`COMMIT` 或者 `ROLLBACK`时才结束. 只要当事务执行, 两个线程就能简单地不能共享连接, 并且在查询的时候也不能共享. 这不需要这样做的时候，这样过度复杂了代码.
+
+> 译者: **`store_result()`推荐，配合`LIMIT`使用. 一次性返回所有结果集, 释放本次查询.
+> `use_result()` 与此相反.
+
 The general upshot of this is: Don't share connections between threads. It's really not worth your effort or mine, and in the end, will probably hurt performance, since the MySQL server runs a separate thread for each connection. You can certainly do things like cache connections in a pool, and give those connections to one thread at a time. If you let two threads use a connection simultaneously, the MySQL client library will probably upchuck and die. You have been warned.
+
+
 
 For threaded applications, try using a connection pool. This can be done using the Pool module.
 
