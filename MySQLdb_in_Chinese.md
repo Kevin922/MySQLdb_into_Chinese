@@ -500,15 +500,21 @@ Connection objects are returned by the connect() function.
 
 `Connection`对象通过`connect()`函数 返回.
 
-commit()
+`commit()`
+
 If the database and the tables support transactions, this commits the current transaction; otherwise this method successfully does nothing.
-rollback()
+
+如果数据库 和 表支持事务, 会提交当前的事务; 否则method直接执行成功, 什么都不做.
+
+`rollback()`
+
 If the database and tables support transactions, this rolls back (cancels) the current transaction; otherwise a NotSupportedError is raised.
+
 cursor([cursorclass])
 MySQL does not support cursors; however, cursors are easily emulated. You can supply an alternative cursor class as an optional parameter. If this is not present, it defaults to the value given when creating the connection object, or the standard Cursor class. Also see the additional supplied cursor classes in the usage section.
 There are many more methods defined on the connection object which are MySQL-specific. For more information on them, consult the internal documentation using pydoc.
 
-Cursor Objects
+###  Cursor Objects
 
 callproc(procname, args)
 Calls stored procedure procname with the sequence of arguments in args. Returns the original arguments. Stored procedure support only works with MySQL-5.0 and newer.
@@ -532,7 +538,7 @@ Advances the cursor to the next result set, discarding the remaining rows in the
 
 Note that MySQL doesn't support multiple result sets until 4.1.
 
-Some examples
+### Some examples
 
 The connect() method works nearly the same as with _mysql:
 
@@ -572,7 +578,7 @@ c.executemany(
       ] )
 Here we are inserting three rows of five values. Notice that there is a mix of types (strings, ints, floats) though we still only use %s. And also note that we only included format strings for one row. MySQLdb picks those out and duplicates them for each row.
 
-Using and extending
+### Using and extending
 
 In general, it is probably wise to not directly interact with the DB API except for small applicatons. Databases, even SQL databases, vary widely in capabilities and may have non-standard features. The DB API does a good job of providing a reasonably portable interface but some methods are non-portable. Specifically, the parameters accepted by connect() are completely implementation-dependent.
 
@@ -599,7 +605,9 @@ SSCursor
 A "server-side" cursor. Like Cursor but uses CursorUseResultMixIn. Use only if you are dealing with potentially large result sets.
 SSDictCursor
 Like SSCursor except it returns rows as dictionaries.
-Embedded Server
+
+
+### Embedded Server
 
 Instead of connecting to a stand-alone server over the network, the embedded server support lets you run a full server right in your Python code or application server.
 
