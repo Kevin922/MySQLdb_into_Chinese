@@ -491,9 +491,14 @@ If the key is a Python type or class, then the value is a callable Python object
 
 This is initialized with reasonable defaults for most types. When creating a Connection object, you can pass your own type converter dictionary as a keyword parameter. Otherwise, it uses a copy of MySQLdb.converters.conversions. Several non-standard types are returned as strings, which is how MySQL returns all columns. For more details, see the built-in module documentation.
 
-Connection Objects
+这个值初始化为一个对大部分类型都合理的默认值. 当建立一个连接对象, 你可以传一个你自己的 *类型转化字典* 作为 *关键字参数*. 否则, 默认用一个`MySQLdb.converters.conversions`的拷贝. 几个非标准的类型作为字符串返回, 她就是MySQL怎样返回所有列的. 为了更多地细节, 查看 内置库 文档.
+
+
+### Connection Objects
 
 Connection objects are returned by the connect() function.
+
+`Connection`对象通过`connect()`函数 返回.
 
 commit()
 If the database and the tables support transactions, this commits the current transaction; otherwise this method successfully does nothing.
