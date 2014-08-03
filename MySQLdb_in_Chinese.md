@@ -437,27 +437,57 @@ MySQL协议不能处理多个线程同时使用一个连接. 一些早期的MySQ
 
 The general upshot of this is: Don't share connections between threads. It's really not worth your effort or mine, and in the end, will probably hurt performance, since the MySQL server runs a separate thread for each connection. You can certainly do things like cache connections in a pool, and give those connections to one thread at a time. If you let two threads use a connection simultaneously, the MySQL client library will probably upchuck and die. You have been warned.
 
-
+通常的结论是: 不要在线程间共享连接. 这真的不值得你努力, 并且最终, 这样的行为可能会损害性能, 因为MySQL数据库为每一个连接都建立独立的线程. 你一定能做些像 建立线程池之类的事情, 并且把这些连接在一个时刻只给一个线程. 如果你让两个线程同时使用一个连接, MySQL客户端库很可能卡住 并 挂掉. 我已经警告过你了.
 
 For threaded applications, try using a connection pool. This can be done using the Pool module.
 
-charset
+为了线程应用, 试试用*连接池*. 这可以用`Pool 库`来实现.
+
+`charset`
+
 The character set used by the connection. In MySQL-4.1 and newer, it is possible (but not recommended) to change the connection's character set with an SQL statement. If you do this, you'll also need to change this attribute. Otherwise, you'll get encoding errors.
-paramstyle
+
+设置连接时使用的字符集. MySQL-4.1 或者 更高, (并不推荐)可以通过一个 SQL statement声明改变连接的字符集. 如果你这样做, 你同样需要改变这个属性. 否则,你会获得编码错误.
+
+`paramstyle`
+
 String constant stating the type of parameter marker formatting expected by the interface. Set to 'format' = ANSI C printf format codes, e.g. '...WHERE name=%s'. If a mapping object is used for conn.execute(), then the interface actually uses 'pyformat' = Python extended format codes, e.g. '...WHERE name=%(name)s'. However, the API does not presently allow the specification of more than one style in paramstyle.
+
+字符串静态变量声明了接口希望的 参数格式化格式. 设置 `format` 代表 ANSI C `printf` 格式化编码, 比如：`...WHERE name=%s`. 如果`conn.execute()`使用一个 映射对象, 然后接口实际上使用`pyformat`, 代表 用Python扩展格式化编码，比如`...WHERE name=%(name)s'. 但是,  目前 API不允许`paramstyle`指定多个风格.
 
 Note that any literal percent signs in the query string passed to execute() must be escaped, i.e. %%.
 
+注意, 在查询语句中, 任何的传入`execute()`字符百分比标示都需要转义, 比如 `%%`
+
 Parameter placeholders can only be used to insert column values. They can not be used for other parts of SQL, such as table names, statements, etc.
 
-conv
+参数占位符 只能用于插入 *column*列值. 不能用于SQL的其他, 比如 表名, 声明, 等.
+
+> 译者，这个参数是很有用的，我之前的工作使用了一个web.py二次封装的框架, 其中直接写原生SQL, 直接只用MySQLdb是我推荐喜欢的风格. 
+> 当时在使用MySQLdb的时候, 如果能用好这些参数，如果能认真理解文档，我想能走得更远.
+ 
+
+`conv`
+
 A dictionary or mapping which controls how types are converted from MySQL to Python and vice versa.
+
+一个字典 或 映射类型 定义了 如何从MySQL 到 Python之间的类型转换，反之亦然.
 
 If the key is a MySQL type (from FIELD_TYPE.*), then the value can be either:
 
+如果 键是一个MySQL类型(从 `FIELD_TYPE.*`), 那么值可以是:
+
 a callable object which takes a string argument (the MySQL value),' returning a Python value
+
+一个接受 *字符串参数(MySQL 值)*的可调用对象，返回一个Python值
+
 a sequence of 2-tuples, where the first value is a combination of flags from MySQLdb.constants.FLAG, and the second value is a function as above. The sequence is tested until the flags on the field match those of the first value. If both values are None, then the default conversion is done. Presently this is only used to distinquish TEXT and BLOB columns.
+
+一个 含有2个tuple的列表, 第一个值是一个从`MySQLdb.constants.FLAG`得到的组合, 第二个值是一个同上的 function函数. 遍历这个列表，直到在字段与第一个值相匹配. 如果两个值都为None, 那么执行默认的转换. 目前这只用于区分 `TEXT` 和 `BLOB`字段.
+
 If the key is a Python type or class, then the value is a callable Python object (usually a function) taking two arguments (value to convert, and the conversion dictionary) which converts values of this type to a SQL literal string value.
+
+如果键是一个Python类型 或 类, 那么值是一个 可调用的Python对象(通常是一个function函数) 接受两个参数(1. 用来转化的值, 2. 用来转换的字典)，她转换 某一类型的值 为一个SQL的字符串值.
 
 This is initialized with reasonable defaults for most types. When creating a Connection object, you can pass your own type converter dictionary as a keyword parameter. Otherwise, it uses a copy of MySQLdb.converters.conversions. Several non-standard types are returned as strings, which is how MySQL returns all columns. For more details, see the built-in module documentation.
 
