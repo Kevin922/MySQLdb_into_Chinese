@@ -761,9 +761,9 @@ See the MySQL documentation for more information on the embedded server.
 
 关闭 嵌入服务器. 如果不使用嵌入服务器, 什么都不做. 查阅MySQL文档获得 关于*嵌入服务器*的更多信息.
 
-Title:	MySQLdb: a Python interface for MySQL
-Author:	Andy Dustman
-Version:	$Revision: 421 $
+- Title:	MySQLdb: a Python interface for MySQL
+- Author:	Andy Dustman
+- Version:	$Revision: 421 $
 
 
 ```python
